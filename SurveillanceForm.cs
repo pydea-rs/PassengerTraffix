@@ -37,7 +37,7 @@ namespace PassengerTraffix
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                MessageBoxFarsi.Show(ex.Message, "خطای نامشخص",
+                MessageBoxFarsi.Show("یک خطای نامشخص اتفاق افتاده است. لطفا متن خطای انگلیسی را به واحد فاوا گزارش دهید:\n" + ex.Message, "خطای نامشخص",
                     MessageBoxFarsiButtons.OK, MessageBoxFarsiIcon.Error);
             }
         }
@@ -105,9 +105,10 @@ namespace PassengerTraffix
                 pgbExporting.Visible = true;
                 pgbExporting.Value = 0;
                 // creating Excel Application  
-                Microsoft.Office.Interop.Excel._Application app = new Microsoft.Office.Interop.Excel.Application();
-            
-                app.DefaultSheetDirection = 1; // right to left
+                Microsoft.Office.Interop.Excel._Application app = new Microsoft.Office.Interop.Excel.Application
+                {
+                    DefaultSheetDirection = 1 // right to left
+                };
                 // creating new WorkBook within Excel application  
                 Microsoft.Office.Interop.Excel._Workbook workbook = app.Workbooks.Add(Type.Missing);
                 
@@ -158,7 +159,7 @@ namespace PassengerTraffix
             catch(Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                MessageBoxFarsi.Show(ex.Message, "خطای نامشخص",
+                MessageBoxFarsi.Show("یک خطای نامشخص اتفاق افتاده است. لطفا متن خطای انگلیسی را به واحد فاوا گزارش دهید:\n" + ex.Message, "خطای نامشخص",
                     MessageBoxFarsiButtons.OK, MessageBoxFarsiIcon.Error);
 
             }

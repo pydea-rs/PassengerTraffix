@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SurveillanceForm));
             this.dgvTraffics = new System.Windows.Forms.DataGridView();
             this.tsOptionsContainer = new System.Windows.Forms.ToolStrip();
@@ -50,30 +50,28 @@
             this.dgvTraffics.AllowUserToDeleteRows = false;
             this.dgvTraffics.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvTraffics.BackgroundColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("2  Mitra", 13.75F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvTraffics.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Mitra", 12.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(178)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvTraffics.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvTraffics.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("2  Mitra", 13F);
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvTraffics.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Mitra", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(178)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvTraffics.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvTraffics.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvTraffics.Location = new System.Drawing.Point(0, 0);
-            this.dgvTraffics.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.dgvTraffics.Name = "dgvTraffics";
             this.dgvTraffics.ReadOnly = true;
-            this.dgvTraffics.RowHeadersWidth = 82;
-            this.dgvTraffics.Size = new System.Drawing.Size(1650, 900);
+            this.dgvTraffics.Size = new System.Drawing.Size(825, 468);
             this.dgvTraffics.TabIndex = 0;
             this.dgvTraffics.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvTraffics_CellContentClick);
             this.dgvTraffics.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgvTraffics_DataBindingComplete);
@@ -83,7 +81,6 @@
             this.tsOptionsContainer.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.tsOptionsContainer.Dock = System.Windows.Forms.DockStyle.None;
             this.tsOptionsContainer.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.tsOptionsContainer.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.tsOptionsContainer.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripSeparator3,
             this.pgbExporting,
@@ -93,13 +90,12 @@
             this.toolStripSeparator2,
             this.tsBtnSave});
             this.tsOptionsContainer.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.tsOptionsContainer.Location = new System.Drawing.Point(740, 841);
-            this.tsOptionsContainer.Margin = new System.Windows.Forms.Padding(20, 0, 0, 0);
+            this.tsOptionsContainer.Location = new System.Drawing.Point(370, 420);
+            this.tsOptionsContainer.Margin = new System.Windows.Forms.Padding(10, 0, 0, 0);
             this.tsOptionsContainer.Name = "tsOptionsContainer";
-            this.tsOptionsContainer.Padding = new System.Windows.Forms.Padding(0, 0, 4, 0);
             this.tsOptionsContainer.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
             this.tsOptionsContainer.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.tsOptionsContainer.Size = new System.Drawing.Size(413, 42);
+            this.tsOptionsContainer.Size = new System.Drawing.Size(90, 39);
             this.tsOptionsContainer.TabIndex = 2;
             this.tsOptionsContainer.Text = "toolStrip1";
             // 
@@ -112,7 +108,7 @@
             // 
             this.pgbExporting.Margin = new System.Windows.Forms.Padding(1, 8, 1, 1);
             this.pgbExporting.Name = "pgbExporting";
-            this.pgbExporting.Size = new System.Drawing.Size(200, 29);
+            this.pgbExporting.Size = new System.Drawing.Size(100, 15);
             this.pgbExporting.Visible = false;
             // 
             // tsBtnExportExcel
@@ -122,7 +118,7 @@
             this.tsBtnExportExcel.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tsBtnExportExcel.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsBtnExportExcel.Name = "tsBtnExportExcel";
-            this.tsBtnExportExcel.Size = new System.Drawing.Size(46, 36);
+            this.tsBtnExportExcel.Size = new System.Drawing.Size(36, 36);
             this.tsBtnExportExcel.Click += new System.EventHandler(this.tsBtnExportExcel_Click);
             // 
             // toolStripSeparator1
@@ -153,19 +149,18 @@
             this.tsBtnSave.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tsBtnSave.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsBtnSave.Name = "tsBtnSave";
-            this.tsBtnSave.Size = new System.Drawing.Size(46, 36);
+            this.tsBtnSave.Size = new System.Drawing.Size(36, 36);
             this.tsBtnSave.Visible = false;
             this.tsBtnSave.Click += new System.EventHandler(this.tsBtnSave_Click);
             // 
             // SurveillanceForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1650, 900);
+            this.ClientSize = new System.Drawing.Size(825, 468);
             this.Controls.Add(this.tsOptionsContainer);
             this.Controls.Add(this.dgvTraffics);
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.Name = "SurveillanceForm";
             this.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;

@@ -8,7 +8,7 @@ namespace PassengerTraffix
 {
     class DatabaseOutOfReachException : Exception
     {
-        public DatabaseOutOfReachException() : base("اتصال به پایگاه داده با مشکل مواجه شد!") { }
+        public DatabaseOutOfReachException() : base("اتصال به پایگاه داده با مشکل مواجه شد! در صورتی که نمیدانید مشکل از کجاست به واحد فاوا مراجعه فرمایید.") { }
     }
     
     class FillRequiredFieldsException : Exception
@@ -20,4 +20,8 @@ namespace PassengerTraffix
         public WrongCredentialsException() : base("رمز عبور وارد شده اشتباه است!") { }
     }
 
+    class InvalidInputException : Exception
+    {
+        public InvalidInputException(string fieldName, string cuase) : base(string.Format("{0} باید {1} باشد!", fieldName, cuase)) { }
+    }
 }

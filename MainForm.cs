@@ -14,6 +14,7 @@ namespace PassengerTraffix
     {
         private PersianDateTime expireDate = PersianDateTime.Now.AddMonths(1);
         private List<Passenger> passengers;
+        private Passenger selectedPassenegr = null;
         const string VALIDATION_FILE = "./val.exp";
  
         public static PersianDateTime NextDeadLine(int delta = 1) {
@@ -40,7 +41,7 @@ namespace PassengerTraffix
             InitializeComponent();
             this.passengers = new List<Passenger>();
 
-            try
+            /*try
             {
                 // read expiration date:
                 string date = System.IO.File.ReadAllText(VALIDATION_FILE);
@@ -51,7 +52,7 @@ namespace PassengerTraffix
             {
                 Console.WriteLine(ex.Message);
                 RegisterNextDeadLine(NextDeadLine());
-            }
+            }*/
         }
 
         private SurveillanceForm frmSurveillance;
@@ -68,59 +69,157 @@ namespace PassengerTraffix
             e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
         }
 
+        public static bool IsNumberInputValid(string numericInput, byte samenessCriterion)
+        {
+            bool idioticAscending = true, idioticDescending = true;
+            byte sameChars = 0;
+            for (byte j = 0; j < numericInput.Length - 1; j++)
+            {
+                if (numericInput[j] < '0' || numericInput[j] > '9')
+                    throw new InvalidInputException("کدملی", "فقط شامل ارقام انگلیسی");
+
+                sameChars += (byte)(numericInput[j] == numericInput[j + 1] ? 1 : 0);
+                if (numericInput[j] != numericInput[j + 1] && numericInput[j] != numericInput[j + 1] + 1)
+                    idioticAscending = false;
+                if (numericInput[j] != numericInput[j + 1] && numericInput[j] != numericInput[j + 1] - 1)
+                    idioticDescending = false;
+
+            }
+
+            return numericInput[numericInput.Length - 1] >= '0' && numericInput[numericInput.Length - 1] <= '9' &&
+                sameChars < samenessCriterion && !idioticAscending && !idioticDescending;
+        }
+
+        public static bool IsPhonenumberPrefixValid(string prefix)
+        {
+            string[] acceptablePrefixes = { "911", "921", "912", "901", "902", "936", "935", "937", "938", "939", "903", "930", "931", "933", "920", "921", "922", "990", "991", "992", "996", "905", "13", "21"};
+            for (byte i = 0; i < acceptablePrefixes.Length; i++)
+                if (acceptablePrefixes[i] == prefix)
+                    return true;
+            return false;
+        }
 
         private void btnSubmit_Click(object sender, EventArgs e)
         {
             try
             {
-                if (PersianDateTime.Now.CompareTo(this.expireDate) >= 0)
-                   return;
-                string emptyFields = "";
-                if (txtFullName.Text.Trim() == "")
-                    emptyFields += "نام\n";
-                if (txtNationalID.Text.Trim() == "")
-                    emptyFields += "کد ملی\n";
+                //if (PersianDateTime.Now.CompareTo(this.expireDate) >= 0)
+                //    return;
+                string targetUnit = cbTargetUnit.SelectedIndex >= 0 ? cbTargetUnit.SelectedItem.ToString().Trim() : null,
+                    firstname = TraffixTools.RemoveWhiteSpaces(txtFirstName.Text),
+                    lastname = TraffixTools.RemoveWhiteSpaces(txtLastName.Text),
+                    nationalID = txtNationalID.Text.Trim(),
+                    phonenumber = txtPhonenumber.Text.Trim(),
+                    vehicleModel = TraffixTools.RemoveWhiteSpaces(txtVehicleModel.Text);
 
-                if(checkHasARide.Checked)
+                short closetNumber = 0;
+
+                Plate plate = null;
+                string emptyFields = "";
+                if (firstname == "")
+                    emptyFields += "نام\n";
+                if (lastname == "")
+                    emptyFields += "نام خانوادگی\n";
+                if (nationalID == "")
+                    emptyFields += "کد ملی\n";
+                if (targetUnit == null)
+                    emptyFields += "واحد مراجعه\n";
+                if (phonenumber == "")
+                    emptyFields += "شماره تلفن\n";
+
+                if (checkHasARide.Checked)
                 {
-                    if (txtVehicleModel.Text.Trim() == "")
+                    if (vehicleModel == "")
                         emptyFields += "مدل خودرو\n";
-                    if (txtPlate1stSection.Text.Trim() == "" || txtPlate2ndSection.Text.Trim() == ""
-                        || txtPlateIranID.Text.Trim() == "" || txtPlateLetter.Text.Trim() == "")
+                    string platePart1 = txtPlate1stSection.Text.Trim(),
+                        platePart2 = txtPlate2ndSection.Text.Trim(),
+                        plateLetter = txtPlateLetter.Text.Trim(),
+                        iranID = txtPlateIranID.Text.Trim();
+
+                    if (platePart1 == "" || platePart2 == "" || iranID == "" || plateLetter == "")
                         emptyFields += "پلاک خودرو\n";
+                    else
+                        plate = new Plate(short.Parse(platePart1), plateLetter, short.Parse(platePart2), short.Parse(iranID));
                 }
                 if (emptyFields != "")
                     throw new FillRequiredFieldsException(emptyFields);
-                
-                // double check values
-                // they can bypass keypress by copy paste
-                Plate plate = !checkHasARide.Checked || txtPlate1stSection.Text.Trim() == "" || txtPlate2ndSection.Text.Trim() == ""
-                    || txtPlateIranID.Text.Trim() == "" || txtPlateLetter.Text.Trim() == "" ? null :
-                    new Plate(short.Parse(txtPlate1stSection.Text.Trim()), txtPlateLetter.Text.Trim(),
-                    short.Parse(txtPlate2ndSection.Text.Trim()), short.Parse(txtPlateIranID.Text.Trim()));
-                Passenger newPassenger = new Passenger(TraffixTools.RemoveWhiteSpaces(txtFullName.Text),
-                    txtNationalID.Text.Trim(), txtPhonenumber.Text.Trim(), cbTargetUnit.SelectedItem.ToString().Trim(),
-                    TraffixTools.RemoveWhiteSpaces(txtVehicleModel.Text), plate, PersianDateTime.Now,
-                    (short)DateTime.Now.Hour, (short)DateTime.Now.Minute, this.checkIsEntering.Checked);
 
-                SQLiteInterface.Database.Add(newPassenger);
+                // nationalID check:
+                if (nationalID.Length < 10)
+                    throw new InvalidInputException("کدملی", "10 رقمی");
+                if(!IsNumberInputValid(nationalID, 7))
+                    throw new InvalidInputException("کدملی", "معتبر");
 
-                MessageBoxFarsi.Show(newPassenger.ToString() + " ثبت شد.", "Okey Dokey");
+                // phoneNumber check:
+                if (phonenumber.Length < 11)
+                    throw new InvalidInputException("شماره تلفن", "11 رقمی");
+                if (phonenumber[0] != '0' || !IsNumberInputValid(phonenumber, 8))
+                    throw new InvalidInputException("شماره تلفن", "معتبر");
+                if (!IsPhonenumberPrefixValid(phonenumber.Substring(1, phonenumber[1] == '9' ? 3 : 2))) // cut the prefix part of the phone number, length 3 for mobile numbers and 2 for home telephone numbers.
+                    throw new InvalidInputException("شماره تلفن", "پیش شماره معتبر داشته");
+
+                try
+                {
+                    string num = txtClosetNumber.Text.Trim();
+                    if(num != "" && num.Length > 0)
+                        closetNumber = short.Parse(txtClosetNumber.Text.Trim());
+                }
+                catch
+                {
+                    throw new InvalidInputException("شماره کمد", "عدد");
+                }
+
+                Passenger passenger;
+                if (this.selectedPassenegr == null)
+                {
+
+                    passenger = new Passenger(firstname, lastname, nationalID, phonenumber, targetUnit, closetNumber,
+                        vehicleModel, plate, PersianDateTime.Now, (short)DateTime.Now.Hour, (short)DateTime.Now.Minute, this.checkIsEntering.Checked);
+                }
+                else
+                {
+                    selectedPassenegr.Firstname = firstname;
+                    selectedPassenegr.Lastname = lastname;
+                    selectedPassenegr.NationalID = nationalID;
+                    selectedPassenegr.Phonenumber = phonenumber;
+                    selectedPassenegr.TargetUnit = targetUnit;
+                    selectedPassenegr.ClosetNumber = closetNumber;
+                    selectedPassenegr.VehicleModel = vehicleModel;
+                    selectedPassenegr.Plate = plate;
+                    selectedPassenegr.Entering = this.checkIsEntering.Checked;
+                    selectedPassenegr.Date = PersianDateTime.Now;
+                    selectedPassenegr.Time = new TimeSpan((short)DateTime.Now.Hour, (short)DateTime.Now.Minute, 0);
+                    passenger = selectedPassenegr;
+                }
+
+                bool done = SQLiteInterface.Database.Update(passenger);
+                if (!done)
+                    throw new Exception("مشکلی غیر منتظره حین ذخیره اطلاعات پیش آمد.");
+                MessageBoxFarsi.Show(passenger.ToString() + " ثبت شد.", "Okey Dokey");
                 this.ClearForm();
                 cbTargetUnit.SelectedIndex = -1;
-
                 cbPassengers.DataSource = null;
-                int i = 0;
-                for (i = 0; i < this.passengers.Count; i++ )
+                if (selectedPassenegr == null)
                 {
-                    if(this.passengers[i].NationalID == newPassenger.NationalID)
+                    int i = 0;
+                    for (i = 0; i < this.passengers.Count; i++)
                     {
-                        this.passengers[i] = newPassenger;
-                        break;
+                        if (this.passengers[i].NationalID == passenger.NationalID)
+                        {
+                            this.passengers[i] = passenger;
+                            break;
+                        }
                     }
+                    if (i >= this.passengers.Count) // if its a new person
+                        this.passengers.Add(passenger);
+                    else // if there is old traffix, its no use then, replace the passenger object with new traffix
+                        this.passengers[i] = passenger;
                 }
-                if(i >= this.passengers.Count)
-                    this.passengers.Add(newPassenger);
+                else
+                {
+                    this.selectedPassenegr = null;
+                }
+
                 cbPassengers.DataSource = this.passengers;
                 cbPassengers.DisplayMember = "FullName";
                 cbPassengers.SelectedIndex = -1;
@@ -137,15 +236,18 @@ namespace PassengerTraffix
             {
                 MessageBoxFarsi.Show(ex.Message, "خطا", MessageBoxFarsiButtons.OK, MessageBoxFarsiIcon.Error);
             }
+
         }
 
         private void ClearForm()
         {
             txtPlate1stSection.Text = txtPlate2ndSection.Text = txtPlateIranID.Text = txtPlateLetter.Text =
                 txtPlateIranID.Text = txtNationalID.Text = txtVehicleModel.Text = txtVehicleModel.Text =
-                txtPhonenumber.Text = txtFullName.Text = "";
+                txtPhonenumber.Text = txtFirstName.Text = txtLastName.Text = this.txtClosetNumber.Text = "";
+            cbTargetUnit.Text = "";
             checkHasARide.Checked = false;
             checkIsEntering.Checked = true;
+            this.selectedPassenegr = null;
         }
 
         private void mnuExit_Click(object sender, EventArgs e)
@@ -158,8 +260,8 @@ namespace PassengerTraffix
         {
             try
             {
-                if (PersianDateTime.Now.CompareTo(this.expireDate) >= 0)
-                   return;
+                //if (PersianDateTime.Now.CompareTo(this.expireDate) >= 0)
+                //    return;
                 if (this.frmSurveillance == null)
                 {
                     string password = Microsoft.VisualBasic.Interaction.InputBox("رمز عبور را وارد کنید:", "رمز عبور");
@@ -178,7 +280,7 @@ namespace PassengerTraffix
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                MessageBoxFarsi.Show(ex.Message, "خطای نامشخص",
+                MessageBoxFarsi.Show("یک خطای نامشخص اتفاق افتاده است. لطفا متن خطای انگلیسی را به واحد فاوا گزارش دهید:\n" + ex.Message, "خطای نامشخص",
                     MessageBoxFarsiButtons.OK, MessageBoxFarsiIcon.Error);
             }
         }
@@ -202,7 +304,7 @@ namespace PassengerTraffix
         private void txtNationalID_TextChanged(object sender, EventArgs e)
         {
             if (txtNationalID.Text.Length >= 10)
-                cbTargetUnit.Focus();
+                txtPhonenumber.Focus();
         }
 
         private void txtPlate1stSection_TextChanged(object sender, EventArgs e)
@@ -267,8 +369,8 @@ namespace PassengerTraffix
 
         private void txtPhonenumber_TextChanged(object sender, EventArgs e)
         {
-            if (txtNationalID.Text.Length >= 11)
-                checkHasARide.Focus();
+            if (txtPhonenumber.Text.Length >= 11)
+                cbTargetUnit.Focus();
         }
 
         private void cbPassengers_KeyDown(object sender, KeyEventArgs e)
@@ -278,7 +380,8 @@ namespace PassengerTraffix
                 if (cbPassengers.SelectedIndex >= 0 && cbPassengers.SelectedIndex <= cbPassengers.Items.Count)
                 {
                     this.ClearForm();
-                    LoadPassenger(cbPassengers.SelectedItem as Passenger);
+                    this.selectedPassenegr = cbPassengers.SelectedItem as Passenger;
+                    LoadPassenger(this.selectedPassenegr);
                     
                 }
             }
@@ -286,11 +389,13 @@ namespace PassengerTraffix
 
         private void LoadPassenger(Passenger passenger)
         {
-            txtFullName.Text = passenger.FullName;
+            txtFirstName.Text = passenger.Firstname;
+            txtLastName.Text = passenger.Lastname;
+            txtClosetNumber.Text = passenger.ClosetNumber.ToString();
             txtNationalID.Text = passenger.NationalID;
             txtPhonenumber.Text = passenger.Phonenumber;
             cbTargetUnit.SelectedItem = passenger.TargetUnit;
-
+            txtClosetNumber.Text = passenger.ClosetNumber > 0 ? passenger.ClosetNumber.ToString() : "";
             if (passenger.VehicleModel.Trim() != "")
             {
                 checkHasARide.Checked = true;
@@ -346,7 +451,7 @@ namespace PassengerTraffix
         private int keyIndex = -1;
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
-            Keys[] myKeys = {Keys.F, Keys.S, Keys.O, Keys.C, Keys.I, Keys.E, Keys.T, Keys.Y};
+            /*Keys[] myKeys = {Keys.F, Keys.S, Keys.O, Keys.C, Keys.I, Keys.E, Keys.T, Keys.Y};
             if (e.Control && e.Alt && e.KeyCode == myKeys[0])
                 keyIndex = 1;
             else if(keyIndex > 0 && keyIndex < myKeys.Length)
@@ -359,7 +464,33 @@ namespace PassengerTraffix
                     RegisterNextDeadLine(NextDeadLine());
                     MessageBox.Show("Enjoy!");
                 }
-            }
+            }*/
+        }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            this.ClearForm();
+        }
+
+        private void txtClosetNumber_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtClosetNumber_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            Console.WriteLine(e.KeyChar != '0');
+            e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar) || (e.KeyChar == '0' && txtClosetNumber.Text.Length == 0);
+        }
+
+        private void txtLastName_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cbTargetUnit_SelectedIndexChanged(object sender, EventArgs e)
+        {
+//            txtClosetNumber.Focus();
         }
     }
 }
